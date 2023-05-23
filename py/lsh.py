@@ -1,8 +1,10 @@
+from random import randint
+import math, hashlib
+
 class minhashSigner:
     def __init__(self, sig_size):
         self.sig_size=sig_size
         self.hash_functions = [hashFamily(randint(0,10000000000)) for i in range(0,sig_size)]
-    
     def compute_set_signature(self, set_):
         set_sig = []
         for h_funct in self.hash_functions:
@@ -11,17 +13,13 @@ class minhashSigner:
                 h = h_funct.get_hash_value(el)
                 if h < min_hash:
                     min_hash = h
-                
             set_sig.append(min_hash)
-        
         return set_sig
-    
     #return a list of lists that can be seen as the signature matrix
     def compute_signature_matrix(self, set_list):
         signatures = []
         for s in set_list:
             signatures.append( self.compute_set_signature(s) )
-            
         return signatures
 
 class hashFamily:
@@ -65,7 +63,7 @@ class lsh:
             if value not in buckets:
                 buckets[value] = [doc_id]
             else:
-                 buckets[value].append(doc_id)
+                buckets[value].append(doc_id)
                 
         return buckets
     
@@ -101,16 +99,16 @@ class lsh:
     def get_similar_items(self, sig_matrix, bands_nr, sign_len):
         similar_docs = set()
         #divide signature matrix into bands
-        bands = lsh_instance.get_signature_matrix_bands(sig_matrix,bands_nr,sign_len)
+        bands = self.get_signature_matrix_bands(sig_matrix,bands_nr,sign_len)
         
         #for all the bands
         for band_id, elements in bands.items():
             #produce the buckets for the given band (band_id) with a random hash function
-            buckets = lsh_instance.get_band_buckets(elements, hash_funct=hashFamily(randint(0,10000000000)))
+            buckets = self.get_band_buckets(elements, hash_funct=hashFamily(randint(0,10000000000)))
             #Get all the candidate pairs
-            candidates = lsh_instance.get_candidates_list(buckets)
+            candidates = self.get_candidates_list(buckets)
             #Check all candidate pairs' signatures
-            for sim_tuple in lsh_instance.check_candidates(candidates, self.threshold, sig_matrix):
+            for sim_tuple in self.check_candidates(candidates, self.threshold, sig_matrix):
                 similar_docs.add( sim_tuple)
 
         return similar_docs #return all the similar signatures that respect the threshold

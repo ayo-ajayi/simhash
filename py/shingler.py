@@ -1,4 +1,5 @@
 import re
+from lsh import hashFamily
 
 class shingler:
     def __init__(self, k):
