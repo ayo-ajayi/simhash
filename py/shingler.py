@@ -1,3 +1,5 @@
+import re
+
 class shingler:
     def __init__(self, k):
         
