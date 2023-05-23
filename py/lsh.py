@@ -26,6 +26,7 @@ class hashFamily:
     def __init__(self, i):
         self.resultSize = 8 # how many bytes we want back
         self.maxLen = 20 # how long can our i be (in decimal)
+        
         self.salt = str(i).zfill(self.maxLen)[-self.maxLen:]
         
     def get_hash_value(self, el_to_hash):
